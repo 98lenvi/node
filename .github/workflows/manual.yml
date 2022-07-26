@@ -24,7 +24,7 @@ jobs:
           repository: unicode-org/icu-data
           path: tools
       - name: update icudata file
-        run: tools/update-timezone.mjs  # Run the timezone tool
+        run: tools/update-timezone.mjs >> $GITHUB_ENV
 
       - name: open pull request      
         uses: gr2m/create-or-update-pull-request-action@6720400cad8e74d7adc64640e4e6ea6748b83d8f  # Create a PR or update the Action's existing PR
