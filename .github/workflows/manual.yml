@@ -19,6 +19,19 @@ jobs:
       - name: update icudata file
         run: tools/update-timezone.mjs >> $GITHUB_ENV
 
+      - name: fetch icu-data
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          persist-credentials: false
+          repository: unicode-org/icu-data
+          path: tools
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
       - name: open pull request      
         uses: gr2m/create-or-update-pull-request-action@6720400cad8e74d7adc64640e4e6ea6748b83d8f  # Create a PR or update the Action's existing PR
         env:
