@@ -11,6 +11,8 @@ const fileNames = [
   'timezoneTypes.res',
   'metaZones.res',
 ];
+execSync('rm -rf icu-data');
+execSync('git clone https://github.com/unicode-org/icu-data');
 const dirs = spawnSync(
   'ls', {
     cwd: 'icu-data/tzdata/icunew',
