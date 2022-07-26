@@ -16,13 +16,6 @@ jobs:
           fetch-depth: '0'
           persist-credentials: false
 
-      - name: fetch icu-data
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
-          persist-credentials: false
-          repository: unicode-org/icu-data
-          path: tools
       - name: update icudata file
         run: tools/update-timezone.mjs >> $GITHUB_ENV
 
