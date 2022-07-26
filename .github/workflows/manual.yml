@@ -10,16 +10,24 @@ jobs:
   timezone_update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: checkout repo
+        uses: actions/checkout@v3
         with:
           fetch-depth: '0'
           persist-credentials: false
-      - uses: actions/checkout@v3
+
+      - name: fetch icu-data
+        uses: actions/checkout@v3
         with:
+          fetch-depth: '0'
+          persist-credentials: false
           repository: unicode-org/icu-data
-          path: './tools'
-      - run: tools/update-timezone.mjs  # Run the timezone tool
-      - uses: gr2m/create-or-update-pull-request-action@6720400cad8e74d7adc64640e4e6ea6748b83d8f  # Create a PR or update the Action's existing PR
+          path: tools
+      - name: update icudata file
+        run: tools/update-timezone.mjs  # Run the timezone tool
+
+      - name: open pull request      
+        uses: gr2m/create-or-update-pull-request-action@6720400cad8e74d7adc64640e4e6ea6748b83d8f  # Create a PR or update the Action's existing PR
         env:
           GITHUB_TOKEN: ${{ secrets.GH_USER_TOKEN }}
         with:
