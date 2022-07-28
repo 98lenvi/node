@@ -1,0 +1,50 @@
+name: Timezone update
+on:
+  schedule:
+    # Run once a week at 00:05 AM UTC on Sunday.
+    - cron: 5 0 * * 0
+
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: lts/*
+
+jobs:
+  timezone_update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          persist-credentials: false
+
+      - name: fetch icu-data
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          path: tools/icu-data
+          persist-credentials: false
+          repository: unicode-org/icu-data
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: update icudata file
+        run: tools/update-timezone.mjs >> $GITHUB_ENV
+
+      - name: open pull request      
+        uses: gr2m/create-or-update-pull-request-action@6720400cad8e74d7adc64640e4e6ea6748b83d8f  # Create a PR or update the Action's existing PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_USER_TOKEN }}
+        with:
+          author: Node.js GitHub Bot <github-bot@iojs.org>
+          body: >
+            updates the ICU files
+          branch: actions/timezone-update  # Custom branch *just* for this Action.
+          commit-message: 'meta: update timezone'
+          labels: meta
+          title: 'meta: update timezone'
